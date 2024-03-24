@@ -194,28 +194,28 @@ func SetTLSClient(cli *tls_client.HttpClient) {
 	client = cli
 }
 
-func GetOpenAIAuthToken(puid string, proxy string) (string, error) {
-	token, err := sendRequest(0, "", puid, proxy)
+func GetOpenAIAuthToken(puid string, proxy string, dx string) (string, error) {
+	token, err := sendRequest(0, "", puid, proxy, dx)
 	return token, err
 }
 
-func GetOpenAIAuthTokenWithBx(bx string, puid string, proxy string) (string, error) {
-	token, err := sendRequest(0, getBdaWitBx(bx), puid, proxy)
+func GetOpenAIAuthTokenWithBx(bx string, puid string, proxy string, dx string) (string, error) {
+	token, err := sendRequest(0, getBdaWitBx(bx), puid, proxy, dx)
 	return token, err
 }
 
-func GetOpenAIToken(version int, puid string, proxy string) (string, error) {
-	token, err := sendRequest(version, "", puid, proxy)
+func GetOpenAIToken(version int, puid string, proxy string, dx string) (string, error) {
+	token, err := sendRequest(version, "", puid, proxy, dx)
 	return token, err
 }
 
-func GetOpenAITokenWithBx(version int, bx string, puid string, proxy string) (string, error) {
-	token, err := sendRequest(version, getBdaWitBx(bx), puid, proxy)
+func GetOpenAITokenWithBx(version int, bx string, puid string, proxy string, dx string) (string, error) {
+	token, err := sendRequest(version, getBdaWitBx(bx), puid, proxy, dx)
 	return token, err
 }
 
 //goland:noinspection SpellCheckingInspection,GoUnhandledErrorResult
-func sendRequest(arkType int, unusebda string, puid string, proxy string) (string, error) {
+func sendRequest(arkType int, unusebda string, puid string, proxy string, dx string) (string, error) {
 	var tmpArk *arkReq
 	if arkType == 0 {
 		if len(authArks) == 0 {
@@ -237,6 +237,7 @@ func sendRequest(arkType int, unusebda string, puid string, proxy string) (strin
 		(*client).SetProxy(proxy)
 	}
 	bda, bw := getBDA(tmpArk)
+	tmpArk.arkBody.Set("data[blob]", dx)
 	tmpArk.arkBody.Set("bda", base64.StdEncoding.EncodeToString([]byte(bda)))
 	tmpArk.arkBody.Set("rnd", strconv.FormatFloat(rand.Float64(), 'f', -1, 64))
 	req, _ := http.NewRequest(http.MethodPost, tmpArk.arkURL, strings.NewReader(tmpArk.arkBody.Encode()))
