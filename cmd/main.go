@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/xqdoo00o/funcaptcha"
+	"github.com/purewater2011/funcaptcha"
 )
 
 func main() {
